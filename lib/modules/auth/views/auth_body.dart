@@ -15,9 +15,12 @@ class AuthBody extends StatefulWidget {
   State<AuthBody> createState() => _AuthBodyState();
 }
 
-class _AuthBodyState extends State<AuthBody> {
+class _AuthBodyState extends State<AuthBody>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _passwordController = TextEditingController();
+  late AnimationController _controller;
+  late Animation<double> _opacityAnimation;
 
   Map<String, String> body = {
     'email': '',
@@ -32,6 +35,16 @@ class _AuthBodyState extends State<AuthBody> {
     } else {
       widget.authController.signUp(body['email']!, body['password']!);
     }
+  }
+
+  @override
+  void initState() {
+    _controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 300));
+    _opacityAnimation = Tween(begin: 0.0, end: 1.0)
+        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
+
+    super.initState();
   }
 
   @override
@@ -94,21 +107,24 @@ class _AuthBodyState extends State<AuthBody> {
                     showPassword: true,
                     textInputType: TextInputType.visiblePassword),
                 if (widget.authController.authMode == AuthMode.signUp)
-                  MyTextFormField(
-                      label: 'confirm password',
-                      hintText: 'please renter your password',
-                      validator: (String password) {
-                        if (password.isEmpty) {
-                          return 'please enter confirm password';
-                        }
-                        if (password != _passwordController.text) {
-                          return 'passwords do not match!';
-                        }
-                      },
-                      onSaved: (String passowrd) {},
-                      isPassword: true,
-                      showPassword: true,
-                      textInputType: TextInputType.visiblePassword),
+                  FadeTransition(
+                    opacity: _opacityAnimation,
+                    child: MyTextFormField(
+                        label: 'confirm password',
+                        hintText: 'please renter your password',
+                        validator: (String password) {
+                          if (password.isEmpty) {
+                            return 'please enter confirm password';
+                          }
+                          if (password != _passwordController.text) {
+                            return 'passwords do not match!';
+                          }
+                        },
+                        onSaved: (String passowrd) {},
+                        isPassword: true,
+                        showPassword: true,
+                        textInputType: TextInputType.visiblePassword),
+                  ),
               ],
             )),
         SizedBox(
@@ -120,6 +136,7 @@ class _AuthBodyState extends State<AuthBody> {
             text1: 'don\'t you have account?',
             text2: 'sign up',
             onClick: () {
+              _controller.forward();
               setState(() {
                 widget.authController.authMode = AuthMode.signUp;
               });
@@ -132,6 +149,7 @@ class _AuthBodyState extends State<AuthBody> {
             text1: 'do you have account?',
             text2: 'sign in',
             onClick: () {
+              _controller.reverse();
               setState(() {
                 widget.authController.authMode = AuthMode.signIn;
               });
@@ -146,7 +164,9 @@ class _AuthBodyState extends State<AuthBody> {
               text: widget.authController.authMode == AuthMode.signIn
                   ? 'Sign in'
                   : 'Sign up',
-              isLoading: widget.authController.isLoggingIn.value,
+              isLoading: widget.authController.authMode == AuthMode.signIn
+                  ? widget.authController.isLoggingIn.value
+                  : widget.authController.isRegistering.value,
               onClick: () {
                 signINSignUp();
               }),

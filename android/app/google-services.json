@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "612149345157",
+    "project_id": "qureos-case-study",
+    "storage_bucket": "qureos-case-study.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:612149345157:android:37a402765553760fc1e2ec",
+        "android_client_info": {
+          "package_name": "com.example.qureoscasestudy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "612149345157-8rrbe2bfke2m4fosn149s0lq67dii29t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYUu8ppRlHVK9JSsjr1UImbowP6PtrTjo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "612149345157-8rrbe2bfke2m4fosn149s0lq67dii29t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
